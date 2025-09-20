@@ -1,0 +1,58 @@
+!@NetOps - dir rivankeys
+openssl req -x509 -newkey rsa:2048 -days 365 -keyout key-rivan.pem -out ca-rivan.pem -nodes
+
+
+CA = PH
+National Capital Region
+Makati
+Rivancorp
+Head Quarters
+Rivan Corporation Cybersecurity Institute
+admin@rivancorp.com
+
+
+!@NetOps - View Certificate contents in readable format
+openssl x509 -in ca-rivan.pem -text -noout
+
+!@NetOps - specify subject names
+openssl req -x509 -newkey rsa:2048 -days 365 -keyout key-rivan.pem -out ca-rivan.pem -nodes -subj "/C=PH/ST=National Capital Region/L=Makati/O=Rivancorp/OU=Head Quarters/CN=Rivan Corporation Cybersecurity Institute/emailAddress=admin@rivancorp.com/subjectAltName=DNS:www.rivan.com,DNS:rivan.com,IP:208.8.8.192"
+
+
+
+Subject: C=PH, ST=National Capital Region, L=Makati, O=Rivancorp, OU=Head Quarters, CN=Rivan Corporation Cybersecurity Institute, emailAddress=admin@rivancorp.com
+
+
+
+!@NetOps - Sign CSR
+openssl x509 -req -in req-ph.pem -CA ca-rivan.pem -CAkey key-rivan.pem -out signed-ph.pem
+openssl x509 -req -in req-jp.pem -CA ca-rivan.pem -CAkey key-rivan.pem -out signed-jp.pem
+
+openssl x509 -in signed-ph.pem -text -noout
+openssl x509 -in signed-jp.pem -text -noout
+
+
+!@Import -signed certificate on cisco
+conf t
+crypto pki import rivantrust certificate
+
+
+Remote Subnet PH
+20.20.20.48 255.255.255.248
+
+Remote Subnet JP
+10.10.10.32 255.255.255.224
+
+
+!@VPN-PH, VPN-JP
+show crypto isakmp sa
+show crypto ipsec sa
+
+
+
+
+!@UTM-PH
+clear ip nat translations
+conf t
+no ip nat inside source static 192.168.103.21 208.8.8.51
+no ip nat inside source static 192.168.103.22 208.8.8.52
+end
