@@ -1,0 +1,34 @@
+CSR1000
+
+enable
+config t
+int g1
+ip addr dhcp
+no shut
+exit
+
+config t
+logging on
+logging host 208.8.8.133 transport udp port 9001
+logging trap informational
+
+enable
+config t
+int g2
+no shut
+
+sh ip int bri
+
+kibana UI
+SIM TOOL (alert tool)
+
+n8n
+elastic (network)
+
+
+WAZUH (endpoint)
+
+sudo systemctl stop firewalld
+ip add
+admin
+C1sc0123..
