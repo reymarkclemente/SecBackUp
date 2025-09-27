@@ -1,0 +1,123 @@
+DAY 4
+
+Login for VM
+Login: root
+Pass: C1sc0123
+
+Get the IP address
+
+!@SOC-IR
+ip-4 addr		208.8.8.144 = your SOC-IR IP
+
+
+Odoo Web
+http://208.8.8.144:8069
+User: itil@rivanschool.com
+Pass: C1sc0123
+
+Service Management
+http://208.8.8.144/otrs/index.pl
+user: root@localhost
+Pass: C1sc0123
+
+
+Customer Management
+http://208.8.8.144/otrs/customer.pl
+user: user1
+Pass: C1sc0123
+
+
+
+
+Level 1 - SOC
+SLA - Service Level Agreement
+
+stop-computer
+
+cd\
+rename-computer iam
+set-netfirewallprofile -name public,private,domain -enabled false
+restart-computer
+
+thin (unli)
+999 tb
+
+striped - raid0
+mirrored - raid1 - efi
+database - raid5
+
+veeam.com
+veritas backup
+
+windows server mana
+
+
+
+iam 
+ncpa.cpl
+
+
+
+ldap
+gpupdate /force
+
+
+Network Policy for CISCO:	shell:priv-lvl=15
+config t
+aaa new-model
+username admin password pass
+radius-server host 10.51.1.8 key keykeymo
+ip radius source vlan 1
+aaa authorization exec default group radius
+aaa authentication login default group radius local
+line vty 0 14
+login authentication default
+end
+
+
+
+ieee 802.1x - network access control
+
+conf t
+no aaa new-model
+
+
+ping time.google.com
+
+
+!@WLC
+conf t
+int g2
+switchport trunk allowed vlan all
+switchport trunk native vlan 1
+switchport mode trunk
+end
+
+!@CoreBABA
+conf t
+ int FA0/1
+  switchport trunk native vlan 1
+  switchport trunk allowed vlan all
+  switchport mode trunk
+  end
+
+
+
+!@CoreBABA
+conf t
+ vlan 30
+  name HR-TEAM
+  exit
+ int vlan 30
+  description HR-TEAM-GW
+  ip add 10.51.30.4 255.255.255.0
+  ip ospf 1 area 0
+  no shut
+ !
+ ip dhcp excluded-address 10.51.30.1 10.51.30.50
+ ip dhcp pool HRPOOL
+  network 10.51.30.0 255.255.255.0
+  default-router 10.51.30.4
+  domain-name HR-TEAM.COM
+  dns-server 10.51.1.10
+  end
